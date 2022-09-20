@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SpaceStone
+
+Parameters:
+
+  StageEnv:
+    Type: String
+    Default: staging
+    AllowedValues:
+      - test
+      - development
+      - staging
+      - production
+
+Resources:
+
+  SpaceStoneLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lib/space_stone.handler
+      Runtime: ruby2.7
+      Timeout: 60
+      MemorySize: 512
+      FunctionName: !Sub space-stone-${StageEnv}
+      Environment:
+        Variables:
+          STAGE_ENV: !Ref StageEnv
+          RUBYOPT: '-W0'
+      Events:
+        SpaceStoneHttpApiProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref SpaceStoneHttpApi
+      
+  SpaceStoneHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref StageEnv
+      Tags:
+        env: !Ref StageEnv
+        group: shared
+        application: space-stone
+  
+
+Outputs:
+
+  SpaceStoneLambdaArn:
+    Description: Lambda Function Arn
+    Value: !GetAtt SpaceStoneLambda.Arn
+  
+  SpaceStoneInvokeUrl:
+    Description: Lambda Invoke URL
+    Value: !Sub "https://${SpaceStoneHttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageEnv}/"
+  

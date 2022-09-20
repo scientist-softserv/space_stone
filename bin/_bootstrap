@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+if [[ -z ${GITHUB_REPOSITORY+x} || -z $GITHUB_REPOSITORY ]]; then
+
+  echo '== Creating SAM deployment bucket =='
+  file=".bucket-name"
+  if [ ! -f $file ]; then
+    rand=$(ruby -r 'securerandom' -e 'puts(SecureRandom.hex[1,10])')
+    name="space-stone-deployment-${rand}"
+    # S3 Name rules - Remove special chars except dash
+    name="$(echo "$name" | sed 's/[^a-zA-Z0-9-]//g')"
+    echo -n "$name" > "$file"
+  else
+    name=$(cat $file)
+  fi
+  aws s3 mb "s3://${name}"
+
+fi
