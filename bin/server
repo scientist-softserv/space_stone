@@ -3,5 +3,5 @@ set -e
 
 docker-compose run \
   -p 3030:3030 \
-  cicd \
+  web \
   ./bin/_server

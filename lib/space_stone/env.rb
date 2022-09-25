@@ -1,6 +1,8 @@
-module SpaceStone
-  module Env
+# frozen_string_literal: true
 
+module SpaceStone
+  # Load env files for various lambda envs
+  module Env
     def stage
       ENV['STAGE_ENV'] || 'development'
     end
@@ -20,6 +22,5 @@ module SpaceStone
     extend self
 
     Dotenv.load(".env.#{stage}", '.env')
-
   end
 end

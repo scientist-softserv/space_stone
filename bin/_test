@@ -3,4 +3,4 @@ set -e
 
 export STAGE_ENV="test"
 
-bundle exec rake test
+bundle exec rspec

@@ -5,4 +5,4 @@ echo '== Building containers =='
 docker pull lambci/lambda:build-ruby2.7
 docker-compose build
 
-docker-compose run cicd ./bin/_bootstrap
+docker-compose run web ./bin/_bootstrap

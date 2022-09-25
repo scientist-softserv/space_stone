@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  cicd:
+  web:
     build: .
     environment:
       - STAGE_ENV=${STAGE_ENV-development}
@@ -15,3 +15,6 @@ services:
       - ~/.aws:/root/.aws:delegated
       - .:/var/task:delegated
       - /var/run/docker.sock:/var/run/docker.sock
+    command: "sam local start-api --host '0.0.0.0' --port 3030 --docker-volume-basedir ${PWD}"
+    ports:
+      - 3030:3030

@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+git_source(:github) { |repo| "git@github.com:#{repo}.git" }
+
+gem 'dotenv'
+gem 'httparty'
+gem 'minitest', group: [:test]
+gem 'nokogiri'
+gem 'pry', group: [:test]
+gem 'rake', group: [:development]
+gem 'rubyzip'
