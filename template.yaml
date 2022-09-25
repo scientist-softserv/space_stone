@@ -21,7 +21,7 @@ Resources:
       CodeUri: .
       Handler: lib/space_stone.download
       Runtime: ruby2.7
-      Timeout: 600
+      Timeout: 900
       MemorySize: 4096
       EphemeralStorage:
         Size: 10240
@@ -59,7 +59,7 @@ Resources:
       Layers:
         - !Ref ProcessDocumentLayer
       Runtime: ruby2.7
-      Timeout: 600
+      Timeout: 900
       MemorySize: 4096
       EphemeralStorage:
         Size: 1280
