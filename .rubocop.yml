@@ -16,6 +16,9 @@ require:
 AllCops:
   NewCops: enable
 
+Metrics/MethodLength:
+  Max: 20
+
 Style/ModuleFunction:
   Enabled: false
 

@@ -27,14 +27,12 @@ def ocr(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   s3_locations = get_event_body(event: event)
   results = []
   s3_locations.each do |s3_location|
-    begin
-      path = SpaceStone::S3Service.download(s3_location)
-      ocr_path = SpaceStone::Ocrcelot.new(path: path).ocr
-      results << ocr_path
-      SpaceStone::S3Service.upload(ocr_path)
-    rescue Aws::S3::Errors::NotFound
-      puts "file #{s3_location} not found. skipping"
-    end
+    path = SpaceStone::S3Service.download(s3_location)
+    ocr_path = SpaceStone::Ocrcelot.new(path: path).ocr
+    results << ocr_path
+    SpaceStone::S3Service.upload(ocr_path)
+  rescue Aws::S3::Errors::NotFound
+    puts "file #{s3_location} not found. skipping"
   end
   send_results(results)
 end
