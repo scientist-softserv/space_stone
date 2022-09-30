@@ -101,7 +101,7 @@ Resources:
    Type: AWS::SQS::Queue
    Properties:
      QueueName: space-stone-download-queue
-     VisibilityTimeout: 600
+     VisibilityTimeout: 900
      Tags:
        - Key: Name
          Value: space-stone-download-queue
@@ -112,7 +112,7 @@ Resources:
    Type: AWS::SQS::Queue
    Properties:
      QueueName: space-stone-ocr-queue
-     VisibilityTimeout: 600
+     VisibilityTimeout: 900
      Tags:
        - Key: Name
          Value: space-stone-ocr-queue

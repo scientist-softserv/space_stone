@@ -18,7 +18,7 @@ module SpaceStone
 
     def ocr
       mono_path = prep_file
-      hocr_path = path.sub('/jp2s/', '/ocr/')
+      hocr_path = path.sub('/downloads/', '/ocr/')
       FileUtils.mkdir_p(File.dirname(hocr_path))
       cmd = "#{OCR_CMD} '#{mono_path}' #{hocr_path} hocr"
       run(cmd)
@@ -26,8 +26,8 @@ module SpaceStone
     end
 
     def prep_file
-      # /tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0000.jp2
-      out_path = path.sub('/jp2s/', '/tiffs/').sub('jp2', 'tiff')
+      # /tmp/ShannaSchmidt32/download/ShannaSchmidt32_0000.jp2
+      out_path = path.sub('/downloads/', '/tiffs/').sub('jp2', 'tiff')
       FileUtils.mkdir_p(File.dirname(out_path))
       opts = '-depth 1 -monochrome -compress Group4 -type bilevel'
       cmd = "convert '#{path}' #{opts} '#{out_path}'"

@@ -41,11 +41,12 @@ end
 def process_ia_id(ia_id)
   FileUtils.mkdir_p("/tmp/#{ia_id}")
   # download zip file
-  jp2s = SpaceStone::IaDownload.new(id: ia_id).download_jp2s
-
-  jp2s.each do |path|
+  ia_download = SpaceStone::IaDownload.new(id: ia_id)
+  downloads = ia_download.download_jp2s
+  downloads += ia_download.dataset_files
+  downloads.each do |path|
     SpaceStone::S3Service.upload(path)
-    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'ocr')
+    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'ocr') if path.match(/jp2$/)
   end
 end
 

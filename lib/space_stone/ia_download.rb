@@ -53,8 +53,12 @@ module SpaceStone
       @remote_file_link = url + jp2_zip_link
     end
 
-    def jp2_path
-      "/tmp/#{id}/jp2s"
+    def downloads_path
+      return @downloads_path if @downloads_path
+
+      @downloads_path = "/tmp/#{id}/downloads"
+      FileUtils.mkdir_p @downloads_path
+      @downloads_path
     end
 
     def zip
@@ -63,14 +67,14 @@ module SpaceStone
       filename = File.basename(remote_file_link).split('.').first
       @zip = Tempfile.new(filename)
       @zip.binmode
-      @zip.write(HTTParty.get(url, headers: { 'Cookie' => login_cookies }).body)
+      @zip.write(HTTParty.get(remote_file_link, headers: { 'Cookie' => login_cookies }).body)
       @zip.close
+      @zip
     end
 
     def extract_file(zip_file)
-      FileUtils.mkdir_p jp2_path
       zip_file.each do |zf|
-        fpath = File.join(jp2_path, File.basename(zf.name))
+        fpath = File.join(downloads_path, File.basename(zf.name))
         zip_file.extract(zf, fpath) unless File.exist?(fpath)
       end
     end
@@ -83,7 +87,41 @@ module SpaceStone
       end
 
       zip.delete
-      Dir.glob("#{jp2_path}/*.jp2").sort.map { |f| File.expand_path(f) }
+      Dir.glob("#{downloads_path}/*.jp2").sort.map { |f| File.expand_path(f) }
+    end
+
+    def dataset_files
+      return @dataset_files if @dataset_files
+
+      @dataset_files = convert_dataset_links_to_files
+      @dataset_files || []
+    end
+
+    def dataset_links
+      url = "https://archive.org/download/#{id}/"
+      response = HTTParty.post(url, headers: { 'Cookie' => login_cookies })
+      page = Nokogiri::HTML(response.body)
+      nodeset = page.css('a[href]')
+      hrefs = nodeset.map { |element| element['href'] }
+      @dataset_links = hrefs.grep(/.xls/)
+      @dataset_links.map { |link| url + link }
+    end
+
+    def dataset_filename(link)
+      file_name = link.split('/').last
+      "#{downloads_path}/#{file_name}"
+    end
+
+    def convert_dataset_links_to_files
+      dataset_links.each do |link|
+        File.open(dataset_filename(link), 'w') do |file|
+          file.binmode
+          HTTParty.get(link, stream_body: true, headers: { 'Cookie' => login_cookies }) do |fragment|
+            file.write(fragment)
+          end
+        end
+      end
+      Dir.glob("#{downloads_path}/*.xlsx").sort.map { |f| File.expand_path(f) }
     end
   end
 end
