@@ -13,7 +13,7 @@ module SpaceStone
     OCR_CMD = 'OMP_THREAD_LIMIT=1 TESSDATA_PREFIX=/opt/share/tessdata LD_LIBRARY_PATH=/opt/lib /opt/bin/tesseract'
 
     def initialize(path:)
-      @path = path.gsub(' ', '_')
+      @path = path.gsub(/[ \(\)\[\]\{\}~\$]/, '_')
     end
 
     def ocr

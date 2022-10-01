@@ -15,7 +15,7 @@ def download(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   results = {}
 
   ia_ids.each do |ia_id|
-    jp2s = process_ia_id(ia_id)
+    jp2s = process_ia_id(ia_id.strip)
     results[ia_id] = jp2s.map { |v| v.sub('/tmp/', '') }
   end
 
