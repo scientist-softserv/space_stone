@@ -6,7 +6,7 @@ module SpaceStone
   # Service object to add messages to either sqs queue
   module SqsService
     def client
-      @client ||= Aws::SQS::Client.new(region: 'us-east-1')
+      @client ||= Aws::SQS::Client.new(region: 'us-east-2')
     end
 
     def ocr_queue_url

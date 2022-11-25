@@ -13,21 +13,23 @@ module SpaceStone
     OCR_CMD = 'OMP_THREAD_LIMIT=1 TESSDATA_PREFIX=/opt/share/tessdata LD_LIBRARY_PATH=/opt/lib /opt/bin/tesseract'
 
     def initialize(path:)
-      @path = path.gsub(' ', '_')
+      @path = path.gsub(/[ \(\)\[\]\{\}~\$\&\%]/, '_')
     end
 
     def ocr
       mono_path = prep_file
-      hocr_path = path.sub('/jp2s/', '/ocr/')
+      hocr_path = path.sub('/downloads/', '/ocr/')
       FileUtils.mkdir_p(File.dirname(hocr_path))
       cmd = "#{OCR_CMD} '#{mono_path}' #{hocr_path} hocr"
       run(cmd)
+      puts "remove tmp files:"
+      puts %x{rm -v #{mono_path}}
       "#{hocr_path}.hocr"
     end
 
     def prep_file
-      # /tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0000.jp2
-      out_path = path.sub('/jp2s/', '/tiffs/').sub('jp2', 'tiff')
+      # /tmp/ShannaSchmidt32/download/ShannaSchmidt32_0000.jp2
+      out_path = path.sub('/downloads/', '/tiffs/').sub('jp2', 'tiff')
       FileUtils.mkdir_p(File.dirname(out_path))
       opts = '-depth 1 -monochrome -compress Group4 -type bilevel'
       cmd = "convert '#{path}' #{opts} '#{out_path}'"

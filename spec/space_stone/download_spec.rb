@@ -5,20 +5,20 @@ require 'spec_helper'
 describe 'download' do # rubocop:disable RSpec/DescribeClass
   let(:jps) do
     [
-      '/tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0000.jp2',
-      '/tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0001.jp2',
-      '/tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0002.jp2',
-      '/tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0003.jp2',
-      '/tmp/ShannaSchmidt32/jp2s/ShannaSchmidt32_0004.jp2'
+      '/tmp/ShannaSchmidt32/downloads/ShannaSchmidt32_0000.jp2',
+      '/tmp/ShannaSchmidt32/downloads/ShannaSchmidt32_0001.jp2',
+      '/tmp/ShannaSchmidt32/downloads/ShannaSchmidt32_0002.jp2',
+      '/tmp/ShannaSchmidt32/downloads/ShannaSchmidt32_0003.jp2',
+      '/tmp/ShannaSchmidt32/downloads/ShannaSchmidt32_0004.jp2'
     ]
   end
   let(:s3_jps) do
     { 'ShannaSchmidt32' => [
-      'ShannaSchmidt32/jp2s/ShannaSchmidt32_0000.jp2',
-      'ShannaSchmidt32/jp2s/ShannaSchmidt32_0001.jp2',
-      'ShannaSchmidt32/jp2s/ShannaSchmidt32_0002.jp2',
-      'ShannaSchmidt32/jp2s/ShannaSchmidt32_0003.jp2',
-      'ShannaSchmidt32/jp2s/ShannaSchmidt32_0004.jp2'
+      'ShannaSchmidt32/downloads/ShannaSchmidt32_0000.jp2',
+      'ShannaSchmidt32/downloads/ShannaSchmidt32_0001.jp2',
+      'ShannaSchmidt32/downloads/ShannaSchmidt32_0002.jp2',
+      'ShannaSchmidt32/downloads/ShannaSchmidt32_0003.jp2',
+      'ShannaSchmidt32/downloads/ShannaSchmidt32_0004.jp2'
     ] }
   end
 

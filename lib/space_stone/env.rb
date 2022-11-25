@@ -16,7 +16,7 @@ module SpaceStone
     end
 
     def region
-      ENV['AWS_REGION'] || 'us-east-1'
+      ENV['AWS_REGION'] || 'us-east-2'
     end
 
     extend self

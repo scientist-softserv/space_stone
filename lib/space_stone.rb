@@ -15,10 +15,10 @@ def download(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   results = {}
 
   ia_ids.each do |ia_id|
-    jp2s = process_ia_id(ia_id)
+    jp2s = process_ia_id(ia_id.strip)
     results[ia_id] = jp2s.map { |v| v.sub('/tmp/', '') }
+    puts %x{rm -rf /tmp/#{ia_id}}
   end
-
   send_results(results)
 end
 
@@ -31,9 +31,12 @@ def ocr(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
     ocr_path = SpaceStone::Ocrcelot.new(path: path).ocr
     results << ocr_path
     SpaceStone::S3Service.upload(ocr_path)
+    puts "remove tmp files:"
+    puts %x{rm -v #{path} #{ocr_path}}
   rescue Aws::S3::Errors::NotFound
     puts "file #{s3_location} not found. skipping"
   end
+
   send_results(results)
 end
 
@@ -41,11 +44,12 @@ end
 def process_ia_id(ia_id)
   FileUtils.mkdir_p("/tmp/#{ia_id}")
   # download zip file
-  jp2s = SpaceStone::IaDownload.new(id: ia_id).download_jp2s
-
-  jp2s.each do |path|
+  ia_download = SpaceStone::IaDownload.new(id: ia_id)
+  downloads = ia_download.download_jp2s
+  downloads += ia_download.dataset_files
+  downloads.each do |path|
     SpaceStone::S3Service.upload(path)
-    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'ocr')
+    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'ocr') if path.match(/jp2$/)
   end
 end
 
