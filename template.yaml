@@ -22,7 +22,7 @@ Resources:
       Handler: lib/space_stone.download
       Runtime: ruby2.7
       Timeout: 900
-      MemorySize: 4096
+      MemorySize: 512
       EphemeralStorage:
         Size: 10240
       FunctionName: !Sub space-stone-${StageEnv}-download
@@ -41,7 +41,7 @@ Resources:
         SqsTrigger:
           Type: SQS
           Properties:
-            BatchSize: 1
+            BatchSize: 5
             Queue: !GetAtt SqsQueueDownload.Arn
       Policies:
         - S3FullAccessPolicy:
@@ -60,9 +60,9 @@ Resources:
         - !Ref ProcessDocumentLayer
       Runtime: ruby2.7
       Timeout: 900
-      MemorySize: 4096
+      MemorySize: 512
       EphemeralStorage:
-        Size: 1280
+        Size: 2560
       FunctionName: !Sub space-stone-${StageEnv}-ocr
       Environment:
         Variables:
@@ -78,7 +78,7 @@ Resources:
         SqsTrigger:
           Type: SQS
           Properties:
-            BatchSize: 1
+            BatchSize: 5
             Queue: !GetAtt SqsQueueOcr.Arn
       Policies:
         - S3FullAccessPolicy:
@@ -97,11 +97,27 @@ Resources:
         group: shared
         application: space-stone
 
+  SqsQueueFailed:
+   Type: AWS::SQS::Queue
+   Properties:
+     QueueName: space-stone-failed-queue
+     VisibilityTimeout: 900
+     RedriveAllowPolicy:
+       redrivePermission: allowAll
+     Tags:
+       - Key: Name
+         Value: space-stone-failed-queue
+       - Key: application
+         Value: space-stone
+
   SqsQueueDownload:
    Type: AWS::SQS::Queue
    Properties:
      QueueName: space-stone-download-queue
      VisibilityTimeout: 900
+     RedrivePolicy:
+       deadLetterTargetArn: !GetAtt SqsQueueFailed.Arn
+       maxReceiveCount: 2
      Tags:
        - Key: Name
          Value: space-stone-download-queue
@@ -113,6 +129,9 @@ Resources:
    Properties:
      QueueName: space-stone-ocr-queue
      VisibilityTimeout: 900
+     RedrivePolicy:
+       deadLetterTargetArn: !GetAtt SqsQueueFailed.Arn
+       maxReceiveCount: 10
      Tags:
        - Key: Name
          Value: space-stone-ocr-queue

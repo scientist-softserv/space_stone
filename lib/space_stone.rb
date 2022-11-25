@@ -17,8 +17,8 @@ def download(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   ia_ids.each do |ia_id|
     jp2s = process_ia_id(ia_id.strip)
     results[ia_id] = jp2s.map { |v| v.sub('/tmp/', '') }
+    puts %x{rm -rf /tmp/#{ia_id}}
   end
-
   send_results(results)
 end
 
@@ -31,9 +31,12 @@ def ocr(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
     ocr_path = SpaceStone::Ocrcelot.new(path: path).ocr
     results << ocr_path
     SpaceStone::S3Service.upload(ocr_path)
+    puts "remove tmp files:"
+    puts %x{rm -v #{path} #{ocr_path}}
   rescue Aws::S3::Errors::NotFound
     puts "file #{s3_location} not found. skipping"
   end
+
   send_results(results)
 end
 

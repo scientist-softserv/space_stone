@@ -22,6 +22,8 @@ module SpaceStone
       FileUtils.mkdir_p(File.dirname(hocr_path))
       cmd = "#{OCR_CMD} '#{mono_path}' #{hocr_path} hocr"
       run(cmd)
+      puts "remove tmp files:"
+      puts %x{rm -v #{mono_path}}
       "#{hocr_path}.hocr"
     end
 

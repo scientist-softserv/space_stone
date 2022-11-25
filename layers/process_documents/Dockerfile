@@ -2,7 +2,7 @@
 # Usage:
 # docker build -t process_images .
 # docker run -v $(pwd):/output process_images
-
+# From https://hint.io/blog/lambda-layer-dependencies and https://gist.github.com/joelmichael/efe48be65d789c555459067b5a54e42d
 ###############################################################################
 # Core
 ###############################################################################

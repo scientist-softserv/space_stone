@@ -23,6 +23,7 @@ rm -rf \
   test \
   tmp \
   vendor/bundle/ruby/2.7.0/cache
+find . -iname "*~undo-tree~" -delete
 popd
 
 pushd ./.aws-sam/build/SpaceStoneLambdaOcr/
@@ -37,4 +38,5 @@ rm -rf \
    test \
    tmp \
    vendor/bundle/ruby/2.7.0/cache
+find . -iname "*~undo-tree~" -delete
 popd
