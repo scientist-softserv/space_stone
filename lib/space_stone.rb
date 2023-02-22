@@ -45,7 +45,7 @@ def thumbnails(event:, context:)
   results = []
   s3_locations.each do |s3_location|
     path = SpaceStone::S3Service.download(s3_location)
-    thumnail_path = fail # TODO MAKE A THUMBNAIL SpaceStone::Ocrcelot.new(path: path).ocr
+    thumbnail_path = SpaceStone::ThumbnailDeriver.new(path: path).derive
     results << thumbnail_path
     SpaceStone::S3Service.upload(thumbnail_path)
   rescue Aws::S3::Errors::NotFound
