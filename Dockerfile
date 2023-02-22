@@ -8,6 +8,6 @@ RUN pip install awscli && \
 
 RUN yum install -y ImageMagick ImageMagick-devel
 
-COPY layers/tesseract /opt
+COPY layers/process_documents /opt
 
 WORKDIR /var/task

@@ -40,6 +40,20 @@ def ocr(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   send_results(results)
 end
 
+def thumbnails(event:, context:)
+  puts "event: #{event.inspect}" unless SpaceStone::Env.test?
+  results = []
+  s3_locations.each do |s3_location|
+    path = SpaceStone::S3Service.download(s3_location)
+    thumnail_path = fail # TODO MAKE A THUMBNAIL SpaceStone::Ocrcelot.new(path: path).ocr
+    results << thumbnail_path
+    SpaceStone::S3Service.upload(thumbnail_path)
+  rescue Aws::S3::Errors::NotFound
+    puts "file #{s3_location} not found. skipping"
+  end
+  send_results(results)
+end
+
 # Helpers
 def process_ia_id(ia_id)
   FileUtils.mkdir_p("/tmp/#{ia_id}")
