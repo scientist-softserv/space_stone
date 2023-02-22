@@ -16,6 +16,12 @@ module SpaceStone
                                               })&.queue_url
     end
 
+    def thumbnail_queue_url
+      @thumbnail_queue_url ||= client.get_queue_url({
+                                                     queue_name: 'space-stone-thumbnail-queue'
+                                                   })&.queue_url
+    end
+
     def download_queue_url
       @download_queue_url ||= client.get_queue_url({
                                                      queue_name: 'space-stone-download-queue'
