@@ -5,6 +5,7 @@ require 'dotenv'
 require_relative './space_stone/env'
 require_relative './space_stone/ia_download'
 require_relative './space_stone/ocrcelot'
+require_relative './space_stone/thumbnail_service'
 require_relative './space_stone/s3_service'
 require_relative './space_stone/sqs_service'
 

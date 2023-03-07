@@ -27,4 +27,5 @@ module SpaceStone
       puts cmd
       `#{cmd}`
     end
+  end
 end
