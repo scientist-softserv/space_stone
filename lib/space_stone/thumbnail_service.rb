@@ -20,7 +20,7 @@ module SpaceStone
     #
     # @see Hyrax::FileSetDerivativesService
     def derive
-      thumbnail_path = path.sub('/downloads/', '/thumbnails/')
+      thumbnail_path = path.sub('/downloads/', '/thumbnails/').sub('.jp2', '.jpg')
       FileUtils.mkdir_p(File.dirname(thumbnail_path))
 
       cmd = "convert #{path} -thumbnail '200x150>' -flatten #{thumbnail_path}"
