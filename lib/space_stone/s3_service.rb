@@ -6,7 +6,11 @@ module SpaceStone
   # Service object for upload and download to S3
   module S3Service
     def resource
-      @resource ||= Aws::S3::Resource.new # (region: 'us-west-2')
+      @resource ||= if ENV.fetch('AWS_S3_ACCESS_KEY_ID', nil)
+        Aws::S3::Resource.new(region: ENV.fetch('AWS_S3_REGION'), credentials: Aws::Credentials.new(ENV.fetch('AWS_S3_ACCESS_KEY_ID'), ENV.fetch('AWS_S3_SECRET_ACCESS_KEY')))
+      else
+        Aws::S3::Resource.new
+      end
     end
 
     def bucket
@@ -15,6 +19,7 @@ module SpaceStone
 
     def upload(path)
       obj = bucket.object(path.sub('/tmp/', ''))
+      puts "upload path #{path} - #{File.exists?(path)}"
       obj.upload_file(path)
     end
 

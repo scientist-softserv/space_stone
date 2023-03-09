@@ -41,8 +41,9 @@ def ocr(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
   send_results(results)
 end
 
-def thumbnails(event:, context:)
+def thumbnail(event:, context:)
   puts "event: #{event.inspect}" unless SpaceStone::Env.test?
+  s3_locations = get_event_body(event: event)
   results = []
   s3_locations.each do |s3_location|
     path = SpaceStone::S3Service.download(s3_location)

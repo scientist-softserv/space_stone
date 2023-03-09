@@ -26,6 +26,7 @@ module SpaceStone
       cmd = "convert #{path} -thumbnail '200x150>' -flatten #{thumbnail_path}"
       puts cmd
       `#{cmd}`
+      thumbnail_path
     end
   end
 end

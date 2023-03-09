@@ -180,7 +180,10 @@ Resources:
    Type: AWS::SQS::Queue
    Properties:
      QueueName: space-stone-thumbnail-queue
-     VisibilityTimeout: 600
+     VisibilityTimeout: 900
+     RedrivePolicy:
+       deadLetterTargetArn: !GetAtt SqsQueueFailed.Arn
+       maxReceiveCount: 10
      Tags:
        - Key: Name
          Value: space-stone-thumbnail-queue

@@ -4,7 +4,7 @@ set -e
 if [[ -z ${GITHUB_REPOSITORY+x} || -z $GITHUB_REPOSITORY ]]; then
 
   echo '== Creating SAM deployment bucket =='
-  file=".bucket-name"
+  file=".bucket-name-$STAGE_ENV"
   if [ ! -f $file ]; then
     rand=$(ruby -r 'securerandom' -e 'puts(SecureRandom.hex[1,10])')
     name="space-stone-deployment-${rand}"
