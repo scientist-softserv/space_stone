@@ -52,7 +52,7 @@ module SpaceStone
       end
     end
 
-    class Download < Base
+    class DownloadInternetArchive < Base
       def invoke
         puts "event: #{event.inspect}" unless SpaceStone::Env.test?
         ia_ids = body
@@ -106,7 +106,7 @@ end
 
 # Invokers
 def download(event:, context:)
-  SpaceStone::Invoker::Download.call(event: event, context: context)
+  SpaceStone::Invoker::DownloadInternetArchive.call(event: event, context: context)
 end
 
 def ocr(event:, context:)
