@@ -2,6 +2,7 @@
 
 require 'json'
 require 'dotenv'
+require_relative "./space_stone/version"
 require_relative './space_stone/env'
 require_relative './space_stone/ia_download'
 require_relative './space_stone/ocrcelot'
