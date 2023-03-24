@@ -10,6 +10,21 @@ require_relative './space_stone/sqs_service'
 
 module SpaceStone
   module Invoker
+    ##
+    # @param command [Symbol] The name of the command you want to invoke
+    # @param env [#invoker_for] The configuration for the command to use for this instance of SpaceStone.
+    # @param scope [Module] The place where we'll look for a sub-module invoker.
+    # @param kwargs [Hash<Symbol,Object>]
+    #
+    # @note Why this arrangement?  By the construction of a SpaceStone, you need methods in the
+    #       global name space (e.g. in the Kernel).  And each project will have it's own set of
+    #       invokers.  Some of those invokers would be re-used.  For example the OCR invoker.
+    #       However, the invoker for downloading is perhaps unique.  What this allows for is a
+    #       common repository to house scripts that might be generally userful and repurposable.
+    def self.invoke(command, scope: self, env: SpaceStone::Env, **kwargs)
+      env.invoker_for(command, scope: scope).call(**kwargs)
+    end
+
     # @abstract
     class Base
       def self.call(event:, context:)
@@ -106,9 +121,9 @@ end
 
 # Invokers
 def download(event:, context:)
-  SpaceStone::Invoker::DownloadInternetArchive.call(event: event, context: context)
+  SpaceStone::Invoker.invoke(:download, event: event, context: context)
 end
 
 def ocr(event:, context:)
-  SpaceStone::Invoker::Ocr.call(event: event, context: context)
+  SpaceStone::Invoker.invoke(:ocr, event: event, context: context)
 end

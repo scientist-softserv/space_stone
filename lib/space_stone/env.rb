@@ -3,6 +3,22 @@
 module SpaceStone
   # Load env files for various lambda envs
   module Env
+    ##
+    # @param command [Symbol]
+    # @param scope [Module]
+    def invoker_for(command, scope:)
+      invoker_constant_name =
+        case command
+        when :download
+          (ENV['INVOKER__DOWNLOAD'] || :DownloadInternetArchive).to_sym
+        when :ocr
+          (ENV['INVOKER__OCR'] || :Ocr).to_sym
+        else
+          raise "Unexpected command #{command}"
+        end
+      scope.const_get(invoker_constant_name)
+    end
+
     # What is the project that this is associated with?
     def project
       # The original "space stone" project was "nnp".  For backwards compatability, I'm going using
