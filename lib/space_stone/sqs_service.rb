@@ -36,6 +36,14 @@ module SpaceStone
                           })
     end
 
+    def add_batch(messages:, queue:)
+      queue_url = send("#{queue}_queue_url")
+      client.send_message_batch({
+        queue_url: queue_url,
+        entries: messages
+      })
+    end
+
     extend self
   end
 end
