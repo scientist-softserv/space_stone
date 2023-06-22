@@ -5,3 +5,38 @@
 !.env.development
 !.env.test
 *~undo-tree~
+
+# Ignore Gemfile.lock
+Gemfile.lock
+
+# Ignore coverage reports
+coverage/*
+
+# Ignore bundler config.
+.bundle
+
+# Ignore JetBrains IDE folder
+.idea/*
+
+# Ignore the default SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+fits.log
+
+# Ignore Byebug command history file.
+.byebug_history
+
+# ignore gem builds
+*.gem
+pkg/
+*~undo-tree~
+.DS_Store
+
+# ignore local config settings
+.vscode/settings.json

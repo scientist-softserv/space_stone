@@ -1,10 +1,21 @@
+PATH
+  remote: .
+  specs:
+    space_stone (0.1.0)
+      aws-sdk-s3
+      aws-sdk-sqs
+      dotenv
+      httparty
+      nokogiri
+      rubyzip
+
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.635.0)
-    aws-sdk-core (3.153.0)
+    aws-partitions (1.636.0)
+    aws-sdk-core (3.154.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -34,11 +45,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     multi_xml (0.6.0)
-    nokogiri (1.13.8-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.13.8-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.13.8-x86_64-linux)
+    nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
     parallel (1.22.1)
     parser (3.1.2.1)
@@ -46,7 +53,7 @@ GEM
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    racc (1.6.0)
+    racc (1.6.2)
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.5.0)
@@ -89,18 +96,13 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  aws-sdk-s3
-  aws-sdk-sqs
-  dotenv
-  httparty
-  nokogiri
   pry
   rake
   rspec
   rubocop
   rubocop-rake
   rubocop-rspec
-  rubyzip
+  space_stone!
 
 BUNDLED WITH
    2.2.26
