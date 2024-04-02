@@ -22,7 +22,7 @@ rm -rf \
   README.md \
   test \
   tmp \
-  vendor/bundle/ruby/2.7.0/cache
+  vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
 
@@ -37,6 +37,6 @@ rm -rf \
    README.md \
    test \
    tmp \
-   vendor/bundle/ruby/2.7.0/cache
+   vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
