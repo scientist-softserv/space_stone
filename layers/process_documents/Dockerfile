@@ -7,8 +7,8 @@
 # Core
 ###############################################################################
 
-# Use AWS Lambda ruby2.7 build environment
-FROM lambci/lambda:build-ruby2.7
+# Use AWS Lambda ruby3.2 build environment
+FROM amazon/aws-lambda-ruby:3.2
 
 # Update all existing packages
 RUN yum update -y
@@ -25,13 +25,26 @@ ENV CXXFLAGS $CFLAGS
 WORKDIR /root
 
 # Leptonica image-reading dependencies
-RUN yum install -y libjpeg-devel libpng-devel libtiff-devel
+RUN yum install -y \
+      libjpeg-devel \
+      libpng-devel \
+      libtiff-devel \
+      tar \
+      gzip \
+      gcc-c++ \
+      make \
+      libtool
 
-RUN curl -O http://www.leptonica.org/source/leptonica-1.79.0.tar.gz
+# Clean up YUM caches to keep the image size down
+RUN yum clean all
+
+RUN curl -LO https://github.com/DanBloomberg/leptonica/releases/download/1.79.0/leptonica-1.79.0.tar.gz
 RUN tar zxvf leptonica-1.79.0.tar.gz
 
-WORKDIR leptonica-1.79.0
-RUN ./configure --prefix=/opt
+WORKDIR /root/leptonica-1.79.0
+# FIXME: figure out how to run without  --disable-dependency-tracking flag
+# RUN ./configure --prefix=/opt
+RUN ./configure --prefix=/opt --disable-dependency-tracking
 RUN make install
 
 ###############################################################################
@@ -49,7 +62,7 @@ RUN curl -Lo tesseract-4.1.1.tar.gz \
   https://github.com/tesseract-ocr/tesseract/archive/4.1.1.tar.gz
 RUN tar zxvf tesseract-4.1.1.tar.gz
 
-WORKDIR tesseract-4.1.1
+WORKDIR /root/tesseract-4.1.1
 RUN ./autogen.sh --prefix=/opt
 # These ENV vars have to be set or it will not build
 ENV LEPTONICA_CFLAGS -I/opt/include/leptonica
@@ -71,7 +84,7 @@ RUN curl -LO \
   https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs952/ghostscript-9.52.tar.gz
 RUN tar zxvf ghostscript-9.52.tar.gz
 
-WORKDIR ghostscript-9.52
+WORKDIR /root/ghostscript-9.52
 RUN ./configure --prefix=/opt
 RUN make install
 
@@ -87,7 +100,7 @@ RUN make install
 #   https://codeload.github.com/libvips/libvips/tar.gz/v8.9.1
 # RUN tar zxvf libvips-8.9.1.tar.gz
 
-# WORKDIR libvips-8.9.1
+# WORKDIR /root/libvips-8.9.1
 # RUN ./autogen.sh --prefix=/opt/libvips
 # RUN ./configure --prefix=/opt/libvips
 # RUN make install
@@ -107,7 +120,7 @@ RUN curl -Lo ImageMagick-7.0.10-6.tar.gz \
   https://github.com/ImageMagick/ImageMagick/archive/7.0.10-6.tar.gz
 RUN tar zxvf ImageMagick-7.0.10-6.tar.gz
 
-WORKDIR ImageMagick-7.0.10-6
+WORKDIR /root/ImageMagick-7.0.10-6
 RUN ./configure --prefix=/opt
 RUN make install
 
@@ -128,9 +141,9 @@ RUN bundle config set path vendor/bundle
 RUN bundle
 
 # Modify directory structure for Lambda load path
-WORKDIR vendor/bundle
+WORKDIR /root/vendor/bundle
 RUN mkdir ruby/gems
-RUN mv ruby/2.* ruby/gems
+RUN mv ruby/3.* ruby/gems
 RUN mv ruby /opt
 WORKDIR /root
 
@@ -144,7 +157,7 @@ WORKDIR /root
 RUN yum install -y yum-utils rpmdevtools
 
 RUN mkdir rpms
-WORKDIR rpms
+WORKDIR /root/rpms
 
 # Download dependency RPMs
 RUN yumdownloader libjpeg-turbo.x86_64 libpng.x86_64 libtiff.x86_64 \

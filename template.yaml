@@ -20,7 +20,7 @@ Resources:
     Properties:
       CodeUri: .
       Handler: lib/space_stone.download
-      Runtime: ruby2.7
+      Runtime: ruby3.2
       Timeout: 900
       MemorySize: 512
       EphemeralStorage:
@@ -58,7 +58,7 @@ Resources:
       Handler: lib/space_stone.ocr
       Layers:
         - !Ref ProcessDocumentLayer
-      Runtime: ruby2.7
+      Runtime: ruby3.2
       Timeout: 900
       MemorySize: 512
       EphemeralStorage:
@@ -95,7 +95,7 @@ Resources:
       Handler: lib/space_stone.thumbnail
       Layers:
         - !Ref ProcessDocumentLayer
-      Runtime: ruby2.7
+      Runtime: ruby3.2
       Timeout: 900
       MemorySize: 4096
       EphemeralStorage:
@@ -197,7 +197,7 @@ Resources:
       Description: add tesseract, imagemagick for ocr
       ContentUri: layers/process_documents/ProcessDocumentLayer.zip
       CompatibleRuntimes:
-        - ruby2.7
+        - ruby3.2
       LicenseInfo: 'MIT'
       RetentionPolicy: Retain
 Outputs:

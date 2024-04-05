@@ -19,7 +19,7 @@ module SpaceStone
 
     def upload(path)
       obj = bucket.object(path.sub('/tmp/', ''))
-      puts "upload path #{path} - #{File.exists?(path)}"
+      puts "upload path #{path} - #{File.exist?(path)}"
       obj.upload_file(path)
     end
 

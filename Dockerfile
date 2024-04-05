@@ -1,12 +1,17 @@
-FROM lambci/lambda:build-ruby2.7
+FROM amazon/aws-lambda-ruby:3.2
 
-# Lock down AWS SAM version.
-RUN pip install awscli && \
-    pip uninstall --yes aws-sam-cli && \
-    pip install Jinja2==2.11.3 && \
-    pip install aws-sam-cli
+RUN yum groupinstall -y "Development Tools"
+RUN yum install -y \
+      ImageMagick \
+      ImageMagick-devel \
+      awscli \
+      python3-dev \
+      python3-pip
 
-RUN yum install -y ImageMagick ImageMagick-devel
+RUN pip3 uninstall urllib3 && \
+      pip3 install "urllib3<1.27,>=1.25.4"
+
+RUN pip3 install aws-sam-cli
 
 COPY layers/process_documents /opt
 
