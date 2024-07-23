@@ -12,16 +12,16 @@ describe SpaceStone::ThumbnailService do
   end
 
   after do
-    File.delete(thumbnail_location) if File.exists?(thumbnail_location)
+    File.delete(thumbnail_location) if File.exist?(thumbnail_location)
   end
 
   describe '#derive' do
     it 'derives a thumbnail from a path' do
-      expect(File.exists?(thumbnail_location)).to eq(false)
+      expect(File.exist?(thumbnail_location)).to eq(false)
 
       thumbnail_service.derive
 
-      expect(File.exists?(thumbnail_location)).to eq(true)
+      expect(File.exist?(thumbnail_location)).to eq(true)
     end
   end
 end

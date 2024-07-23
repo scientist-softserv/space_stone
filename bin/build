@@ -9,7 +9,7 @@ rm -rf ./.aws-sam \
        ./vendor/bundle
 
 # Build SAM
-sam build
+sam build --profile wustl --region ${AWS_DEFAULT_REGION}
 pushd ./.aws-sam/build/SpaceStoneLambdaDownload/
 
 # Clean un-needed artifacts.
@@ -22,6 +22,7 @@ rm -rf \
   README.md \
   test \
   tmp \
+  .ruby-lsp \
   vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
@@ -37,6 +38,23 @@ rm -rf \
    README.md \
    test \
    tmp \
+  .ruby-lsp \
+   vendor/bundle/ruby/3.*/cache
+find . -iname "*~undo-tree~" -delete
+popd
+
+pushd ./.aws-sam/build/SpaceStoneLambdaThumbnail/
+# Clean un-needed artifacts.
+rm -rf \
+   .env.development \
+   .env.test \
+   docker-compose.yml \
+   layers \
+   Dockerfile \
+   README.md \
+   test \
+   tmp \
+  .ruby-lsp \
    vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd

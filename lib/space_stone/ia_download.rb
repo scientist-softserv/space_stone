@@ -65,10 +65,21 @@ module SpaceStone
       return @zip if @zip
 
       filename = File.basename(remote_file_link).split('.').first
-      @zip = Tempfile.new(filename)
+      @zip = Tempfile.create(filename, '/tmp')
       @zip.binmode
-      @zip.write(HTTParty.get(remote_file_link, headers: { 'Cookie' => login_cookies }).body)
-      @zip.close
+      # Stream the file directly to disk. If we stream into memory, we hit the lambda memory cap on large files
+      begin
+        File.open(@zip.path, 'wb') do |file|
+          HTTParty.get(remote_file_link, headers: { 'Cookie' => login_cookies }, stream_body: true) do |fragment|
+            raise "Non-success status code while downloading file: #{fragment.code}" unless fragment.code == 200
+
+            file.write(fragment)
+          end
+        end
+      ensure
+        @zip.close
+      end
+
       @zip
     end
 
@@ -86,7 +97,7 @@ module SpaceStone
         extract_file(zip_file)
       end
 
-      zip.delete
+      File.delete(zip.path)
       Dir.glob("#{downloads_path}/*.jp2").sort.map { |f| File.expand_path(f) }
     end
 
