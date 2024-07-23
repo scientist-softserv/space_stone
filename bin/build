@@ -9,7 +9,7 @@ rm -rf ./.aws-sam \
        ./vendor/bundle
 
 # Build SAM
-sam build
+sam build --profile wustl --region us-east-2
 pushd ./.aws-sam/build/SpaceStoneLambdaDownload/
 
 # Clean un-needed artifacts.

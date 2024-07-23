@@ -6,6 +6,7 @@ CLOUDFORMATION_BUCKET=$(cat .bucket-name-$STAGE_ENV)
 ./bin/build
 
 sam package \
+  --profile wustl \
   --region ${AWS_DEFAULT_REGION} \
   --template-file ./.aws-sam/build/template.yaml \
   --output-template-file ./.aws-sam/build/packaged.yaml \
@@ -13,6 +14,7 @@ sam package \
   --s3-prefix "space-stone-${STAGE_ENV}"
 
 sam deploy \
+  --profile wustl \
   --region ${AWS_DEFAULT_REGION} \
   --template-file ./.aws-sam/build/packaged.yaml \
   --stack-name "space-stone-${STAGE_ENV}" \
