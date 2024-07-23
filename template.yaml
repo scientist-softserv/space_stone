@@ -20,6 +20,9 @@ Resources:
     Properties:
       CodeUri: .
       Handler: lib/space_stone.download
+      # TODO: Split gems into separate layer; other libs not necessary for download step
+      Layers:
+        - !Ref ProcessDocumentLayer
       Runtime: ruby3.2
       Timeout: 900
       MemorySize: 512
