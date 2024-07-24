@@ -8,7 +8,7 @@ require 'zip'
 module SpaceStone
   # Download files from Internet Archive
   class IaDownload
-    attr_accessor :id
+    attr_accessor :id, :downloads_path
 
     def self.json_data
       return @json_data if @json_data
@@ -31,8 +31,11 @@ module SpaceStone
       @login_cookies = cookie_hash.to_cookie_string
     end
 
-    def initialize(id:)
+    # :base_path must be a full path (i.e. starts with "/") and have no trailing slash
+    def initialize(id:, base_path: '/tmp')
       @id = id
+      @downloads_path = "#{base_path}/#{id}/downloads"
+      FileUtils.mkdir_p @downloads_path
     end
 
     def login_cookies
@@ -51,14 +54,6 @@ module SpaceStone
       return '' unless jp2_zip_link
 
       @remote_file_link = url + jp2_zip_link
-    end
-
-    def downloads_path
-      return @downloads_path if @downloads_path
-
-      @downloads_path = "/tmp/#{id}/downloads"
-      FileUtils.mkdir_p @downloads_path
-      @downloads_path
     end
 
     def zip
