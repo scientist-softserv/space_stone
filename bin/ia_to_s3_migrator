@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Usage: bundle exec bin/ia_to_s3_migrator
+# Usage: STAGE_ENV=production docker compose run web 'bundle exec bin/ia_to_s3_migrator'
 
 require 'ruby-progressbar'
 require_relative '../lib/space_stone'
