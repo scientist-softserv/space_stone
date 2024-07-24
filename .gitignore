@@ -5,3 +5,5 @@
 !.env.development
 !.env.test
 *~undo-tree~
+tmp
+log
