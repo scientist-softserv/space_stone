@@ -65,7 +65,7 @@ def process_ia_id(ia_id, download_dir)
   downloads = ia_download.download_jp2s
   downloads += ia_download.dataset_files
   downloads.each do |path|
-    SpaceStone::S3Service.upload(path)
+    SpaceStone::S3Service.upload(path, download_dir)
     SpaceStone::SqsService.add(message: path.sub("#{download_dir}/", ''), queue: 'ocr') if path.match(/jp2$/)
     SpaceStone::SqsService.add(message: path.sub("#{download_dir}/", ''), queue: 'thumbnail') if path.match(/jp2$/)
   end
