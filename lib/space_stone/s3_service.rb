@@ -17,8 +17,8 @@ module SpaceStone
       @bucket ||= resource.bucket(ENV.fetch('AWS_S3_BUCKET'))
     end
 
-    def upload(path)
-      obj = bucket.object(path.sub('/tmp/', ''))
+    def upload(path, download_dir = '/tmp')
+      obj = bucket.object(path.sub("#{download_dir}/", ''))
       puts "upload path #{path} - #{File.exist?(path)}"
       obj.upload_file(path)
     end

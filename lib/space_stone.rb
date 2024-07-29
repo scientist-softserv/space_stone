@@ -10,15 +10,16 @@ require_relative './space_stone/s3_service'
 require_relative './space_stone/sqs_service'
 
 # Invokers
-def download(event:, context:) # rubocop:disable Lint/UnusedMethodArgument
+# :download_dir must be a full path (i.e. starts with "/") and have no trailing slash
+def download(event:, context:, download_dir: '/tmp') # rubocop:disable Lint/UnusedMethodArgument
   puts "event: #{event.inspect}" unless SpaceStone::Env.test?
   ia_ids = get_event_body(event: event)
   results = {}
 
   ia_ids.each do |ia_id|
-    jp2s = process_ia_id(ia_id.strip)
-    results[ia_id] = jp2s.map { |v| v.sub('/tmp/', '') }
-    puts %x{rm -rf /tmp/#{ia_id}}
+    jp2s = process_ia_id(ia_id.strip, download_dir)
+    results[ia_id] = jp2s.map { |v| v.sub("#{download_dir}/", '') }
+    puts %x{rm -rf #{download_dir}/#{ia_id}}
   end
   send_results(results)
 end
@@ -57,16 +58,16 @@ def thumbnail(event:, context:)
 end
 
 # Helpers
-def process_ia_id(ia_id)
-  FileUtils.mkdir_p("/tmp/#{ia_id}")
+def process_ia_id(ia_id, download_dir)
+  FileUtils.mkdir_p("#{download_dir}/#{ia_id}")
   # download zip file
-  ia_download = SpaceStone::IaDownload.new(id: ia_id)
+  ia_download = SpaceStone::IaDownload.new(id: ia_id, base_path: download_dir)
   downloads = ia_download.download_jp2s
   downloads += ia_download.dataset_files
   downloads.each do |path|
-    SpaceStone::S3Service.upload(path)
-    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'ocr') if path.match(/jp2$/)
-    SpaceStone::SqsService.add(message: path.sub('/tmp/', ''), queue: 'thumbnail') if path.match(/jp2$/)
+    SpaceStone::S3Service.upload(path, download_dir)
+    SpaceStone::SqsService.add(message: path.sub("#{download_dir}/", ''), queue: 'ocr') if path.match(/jp2$/)
+    SpaceStone::SqsService.add(message: path.sub("#{download_dir}/", ''), queue: 'thumbnail') if path.match(/jp2$/)
   end
 end
 
