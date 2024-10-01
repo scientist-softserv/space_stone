@@ -18,7 +18,7 @@ iaids.each do |iaid|
   if s3_bucket.objects(prefix: "#{iaid}/downloads").any?
     logger.warn("== #{iaid} == Files have already been uploaded to S3, skipping")
   else
-    logger.info(" == #{iaid} == Downloading files...")
+    logger.info("== #{iaid} == Downloading files...")
     process_ia_id(iaid, '/store/tmp/fast-tmp')
   end
   progressbar.increment
