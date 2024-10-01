@@ -63,7 +63,7 @@ Resources:
         - !Ref ProcessDocumentLayer
       Runtime: ruby3.2
       Timeout: 900
-      MemorySize: 512
+      MemorySize: 1024
       EphemeralStorage:
         Size: 2560
       FunctionName: !Sub space-stone-${StageEnv}-ocr
@@ -172,7 +172,7 @@ Resources:
      VisibilityTimeout: 900
      RedrivePolicy:
        deadLetterTargetArn: !GetAtt SqsQueueFailed.Arn
-       maxReceiveCount: 10
+       maxReceiveCount: 2
      Tags:
        - Key: Name
          Value: space-stone-ocr-queue
@@ -186,7 +186,7 @@ Resources:
      VisibilityTimeout: 900
      RedrivePolicy:
        deadLetterTargetArn: !GetAtt SqsQueueFailed.Arn
-       maxReceiveCount: 10
+       maxReceiveCount: 2
      Tags:
        - Key: Name
          Value: space-stone-thumbnail-queue
