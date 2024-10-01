@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+STAGE_ENV=production docker compose run \
+  --rm \
+  --remove-orphans \
+  --volume /store/tmp/fast-tmp:/store/tmp/fast-tmp \
+  web \
+  'bundle exec bin/ia_to_s3_migrator'

@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+# Usage: bin/migrate_iaids
+
+require 'ruby-progressbar'
+require_relative '../lib/space_stone'
+
+puts '== Tail log/ia_to_s3_migrator.log for logs =='
+
+iaids = File.read('tmp/iaids.txt').split("\n")
+logger = Logger.new('log/ia_to_s3_migrator.log')
+progressbar = ProgressBar.create(total: iaids.size, format: '%a %e %P% Processed: %c from %C')
+s3_bucket = SpaceStone::S3Service.bucket
+
+iaids.each do |iaid|
+  # WARN: This dumbly checks for any downloads; if some files have been uploaded
+  # but some haven't, it will skip uploading all of them
+  if s3_bucket.objects(prefix: "#{iaid}/downloads").any?
+    logger.warn("== #{iaid} == Files have already been uploaded to S3, skipping")
+  else
+    logger.info("== #{iaid} == Downloading files...")
+    process_ia_id(iaid, '/store/tmp/fast-tmp')
+  end
+  progressbar.increment
+end

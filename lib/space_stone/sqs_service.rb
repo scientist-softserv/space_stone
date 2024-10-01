@@ -6,7 +6,11 @@ module SpaceStone
   # Service object to add messages to either sqs queue
   module SqsService
     def client
-      @client ||= Aws::SQS::Client.new(region: 'us-east-2')
+      @client ||= if ENV.fetch('AWS_S3_ACCESS_KEY_ID', nil)
+                    Aws::SQS::Client.new(region: 'us-east-2', credentials: Aws::Credentials.new(ENV.fetch('AWS_S3_ACCESS_KEY_ID'), ENV.fetch('AWS_S3_SECRET_ACCESS_KEY')))
+                  else
+                    Aws::SQS::Client.new(region: 'us-east-2')
+                  end
     end
 
     def ocr_queue_url

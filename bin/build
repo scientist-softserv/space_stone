@@ -23,6 +23,7 @@ rm -rf \
   test \
   tmp \
   .ruby-lsp \
+  log \
   vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
@@ -38,7 +39,8 @@ rm -rf \
    README.md \
    test \
    tmp \
-  .ruby-lsp \
+   .ruby-lsp \
+   log \
    vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
@@ -54,7 +56,8 @@ rm -rf \
    README.md \
    test \
    tmp \
-  .ruby-lsp \
+   .ruby-lsp \
+   log \
    vendor/bundle/ruby/3.*/cache
 find . -iname "*~undo-tree~" -delete
 popd
