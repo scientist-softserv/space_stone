@@ -26,14 +26,14 @@ WORKDIR /root
 
 # Leptonica image-reading dependencies
 RUN yum install -y \
-      libjpeg-devel \
-      libpng-devel \
-      libtiff-devel \
-      tar \
-      gzip \
-      gcc-c++ \
-      make \
-      libtool
+  libjpeg-devel \
+  libpng-devel \
+  libtiff-devel \
+  tar \
+  gzip \
+  gcc-c++ \
+  make \
+  libtool
 
 # Clean up YUM caches to keep the image size down
 RUN yum clean all
@@ -114,7 +114,7 @@ RUN make install
 
 WORKDIR /root
 
-RUN yum install -y ghostscript-devel openjpeg2 opentjpeg2-devel openjpeg2-tools
+RUN yum install -y ghostscript-devel openjpeg2 openjpeg2-devel openjpeg2-tools
 
 RUN curl -Lo ImageMagick-7.0.10-6.tar.gz \
   https://github.com/ImageMagick/ImageMagick/archive/7.0.10-6.tar.gz
@@ -193,12 +193,18 @@ RUN rm -r /opt/lib64
 WORKDIR /opt/share/tessdata/configs
 RUN mkdir -p /opt/share/tessdata/configs && curl -LO https://raw.githubusercontent.com/tesseract-ocr/tessconfigs/3decf1c8252ba6dbeef0bf908f4b0aab7f18d113/configs/hocr
 
+# Symlink versioned binary to executable
+WORKDIR /opt/lib
+RUN ln -s libtiff.so.5.2.0 libtiff.so.5
+RUN ln -s libjpeg.so.62.3.0 libjpeg.so.62
+RUN ln -s libgomp.so.1.0.0 libgomp.so.1
+
 ###############################################################################
 # Zip all dependencies
 ###############################################################################
 
 WORKDIR /opt
-RUN zip -r /root/ProcessDocumentLayer.zip *
+RUN zip -r -y /root/ProcessDocumentLayer.zip *
 
 ###############################################################################
 # Entrypoint: Copy zip file to host
