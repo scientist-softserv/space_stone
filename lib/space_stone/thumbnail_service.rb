@@ -26,6 +26,7 @@ module SpaceStone
       cmd = "convert #{path} -thumbnail '200x150>' -flatten #{thumbnail_path}"
       puts cmd
       `#{cmd}`
+      raise 'generating thumbnail failed' unless File.exist?(thumbnail_path)
       thumbnail_path
     end
   end
