@@ -22,9 +22,11 @@ module SpaceStone
       FileUtils.mkdir_p(File.dirname(hocr_path))
       cmd = "#{OCR_CMD} '#{mono_path}' #{hocr_path} hocr"
       run(cmd)
-      puts "remove tmp files:"
-      puts %x{rm -v #{mono_path}}
-      "#{hocr_path}.hocr"
+      file_path = "#{hocr_path}.hocr"
+      raise 'generating OCR file failed' unless File.exist?(file_path)
+      puts 'remove tmp files:'
+      puts `rm -v #{mono_path}`
+      file_path
     end
 
     def prep_file
@@ -34,6 +36,7 @@ module SpaceStone
       opts = '-depth 1 -monochrome -compress Group4 -type bilevel'
       cmd = "convert '#{path}' #{opts} '#{out_path}'"
       run(cmd)
+      raise 'generating TIFF file failed' unless File.exist?(out_path)
       out_path
     end
 
